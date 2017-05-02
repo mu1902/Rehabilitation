@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>康复病例管理</title>
+    <meta charset="UTF-8">
+    <script src="bin/jquery-1.9.1.min.js"></script>
+    <script src="bin/moment.min.js"></script>
+    <script src="bin/bootstrap.min.js"></script>
+    <script src="bin/bootstrap-datetimepicker.min.js"></script>
+    <script src="bin/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="bin/jquery.validate.min.js"></script>
+
+    <script src="js/control.js"></script>
+    <script src="js/patient.js"></script>
+    <script src="js/case.js"></script>
+    <script src="js/period.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="css/jquery.bootstrap-touchspin.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand">康复病例管理</a>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">用户<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">登陆</a>
+                                </li>
+                                <li><a href="#">注册</a>
+                                </li>
+                                <li><a href="#">信息</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="#">登出</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <form class="navbar-form navbar-right">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="搜索">
+                        </div>
+                        <button type="submit" class="btn btn-default">提交</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+
+        <div class="row-fluid">
+            <div class="row-fluid" id="welcome">
+
+            </div>
+            <div class="row-fluid">
+                <div class="col-md-3">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" id="headingOne">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">病患信息</a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="list-group">
+                                        <a class="list-group-item list-group-item-info" data-toggle="tab" href="#ModPatient">查询病患信息</a>
+                                        <a class="list-group-item list-group-item-info" data-toggle="tab" href="#AddPatient">新增病患信息</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" id="headingTwo">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">病例信息</a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="list-group">
+                                        <a class="list-group-item list-group-item-info" data-toggle="tab" href="#ModCase">查询病例信息</a>
+                                        <a class="list-group-item list-group-item-info" data-toggle="tab" href="#AddCase">新增病例信息</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" id="headingThree">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">疗程记录</a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="list-group">
+                                        <a class="list-group-item list-group-item-info" data-toggle="tab" href="#ProjectHis">记录疗程</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="panel panel-primary tab-pane fade in active" id="ModPatient">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">查询病患信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-inline" id="QueryPatientFrm">
+                                    <div class="form-group">
+                                        <label for="name">编号：</label>
+                                        <input type="text" class="form-control" name="PatientNo" placeholder="请输入编号">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">姓名：</label>
+                                        <input type="text" class="form-control" name="Name" placeholder="请输入姓名">
+                                    </div>
+                                    <input type="button" class="btn btn-primary" id="QueryPatientBtn" value="查询">
+                                </form>
+                                <table class="table table-striped table-hover">
+                                    <caption></caption>
+                                    <thead>
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>姓名</th>
+                                            <th>性别</th>
+                                            <th>年龄</th>
+                                            <th>门诊住院号</th>
+                                            <th>地址</th>
+                                            <th>邮编</th>
+                                            <th>联系方式</th>
+                                            <th>床号</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="PatientData">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary tab-pane fade" id="AddPatient">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">新增病患信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal" id="AddPatientFrm">
+                                    <div class="form-group">
+                                        <label for="Name" class="control-label col-md-3 ">姓名</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="Name" placeholder="请输入姓名">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Gender" class="control-label col-md-3">性别</label>
+                                        <div class="col-md-5">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="Gender" value="男" checked="checked">男
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="Gender" value="女">女
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Year" class="control-label col-md-3">出生年份</label>
+                                        <div class="col-md-5">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control spin" data-bts-min="1900" data-bts-max="2099" data-bts-step="1" value="1950" name="Year"
+                                                    id="Year" placeholder="请输入年份">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="CardNo" class="control-label col-md-3">门诊住院号</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="CardNo" placeholder="请输入门诊住院号">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Address" class="control-label col-md-3">地址</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="Address" placeholder="请输入地址">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Postcode" class="control-label col-md-3">邮编</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="Postcode" placeholder="请输入邮编">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Phone" class="control-label col-md-3">电话</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="Phone" placeholder="请输入电话">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="BedNo" class="control-label col-md-3">床号</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="BedNo" placeholder="床号">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-offset-3 col-md-5">
+                                        <input type="button" class="btn btn-primary" id="AddPatientBtn" value="保存">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary tab-pane fade" id="ModCase">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">查询病例信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <h4>
+                                    <span class="label label-primary PatientSt"></span>
+                                </h4>
+                                <table class="table table-striped table-hover">
+                                    <caption></caption>
+                                    <thead>
+                                        <tr>
+                                            <th>病例编号</th>
+                                            <th>创建日期</th>
+                                            <th>诊断类型</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="CaseData">
+
+                                    </tbody>
+                                </table>
+
+                                <div class="panel panel-info hidden" id="caseIns">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">病例报告</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <label>主诉：</label>
+                                        <p id="i_Description"></p>
+                                        <label>病史：</label>
+                                        <p id="i_SickHistory"></p>
+                                        <label>诊断：</label>
+                                        <span class="label label-info" id="i_CaseType"></span>
+                                        <br/>
+                                        <label>体检和评定：</label>
+                                        <ul class="nav nav-tabs hidden" id="i_Check">
+                                            <li class="active"><a href="#i_Case1" data-toggle="tab">1</a>
+                                            </li>
+                                            <li><a href="#i_Case2" data-toggle="tab">2</a>
+                                            </li>
+                                            <li><a href="#i_Case3" data-toggle="tab">3</a>
+                                            </li>
+                                            <li><a href="#i_Case4" data-toggle="tab">4</a>
+                                            </li>
+                                            <li><a href="#i_Case5" data-toggle="tab">5</a>
+                                            </li>
+                                            <li><a href="#i_Case6" data-toggle="tab">6</a>
+                                            </li>
+                                            <li><a href="#i_Case8" data-toggle="tab">8</a>
+                                            </li>
+                                            <li><a href="#i_Case9" data-toggle="tab">9</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade in active" id="i_Case1">
+                                                <label>血压：<span class="label label-info" id="c1_xueya"></span>；</label>
+                                                <label>颈部活动受限，前屈：<span class="label label-info" id="c1_qianqu"></span>°；</label>
+                                                <label>颈部活动受限，左右旋转：<span class="label label-info" id="c1_xuanzhuan"></span>°；</label>
+                                                <label>C5、6、7棘突压痛：<span class="label label-info" id="c1_jitu"></span>；</label>
+                                                <label>颈部及双肩胛提肌压痛：<span class="label label-info" id="c1_tiji"></span>；</label>
+                                                <label>疼痛数字评分：<span class="label label-info" id="c1_tengtong"></span>分；</label>
+                                                <label>压顶试验：<span class="label label-info" id="c1_yading"></span>；</label>
+                                                <label>臂丛牵拉试验：<span class="label label-info" id="c1_bicong"></span>；</label>
+                                                <label>霍夫曼征：<span class="label label-info" id="c1_hoffmann"></span>；</label>
+
+                                                <p id="c1_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case2">
+                                                <label>血压：<span class="label label-info" id="c2_xueya"></span>；</label>
+                                                <label>肩部活动受限，前屈：<span class="label label-info" id="c2_qianqu"></span>°；</label>
+                                                <label>肩部活动受限，后伸：<span class="label label-info" id="c2_houshen"></span>°；</label>
+                                                <label>水平外展：<span class="label label-info" id="c2_waizhan"></span>°；</label>
+                                                <label>水平内收：<span class="label label-info" id="c2_neishou"></span>°；</label>
+                                                <label>外展内旋：<span class="label label-info" id="c2_neixuan"></span>°；</label>
+                                                <label>外展外旋：<span class="label label-info" id="c2_waixuan"></span>°；</label>
+                                                <label>肩前后中压痛：<span class="label label-info" id="c2_yatong"></span>；</label>
+                                                <label>疼痛数字评分：<span class="label label-info" id="c2_tengtong"></span>分；</label>
+                                                <p id="c2_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case3">
+                                                <label>血压：<span class="label label-info" id="c3_xueya"></span>；</label>
+                                                <label>腰部活动受限，前屈：<span class="label label-info" id="c3_qianqu"></span>°；</label>
+                                                <label>L3、4、5 S1棘突压痛：<span class="label label-info" id="c3_jitu"></span>；</label>
+                                                <label>L3、4、5 S1棘突旁压痛：<span class="label label-info" id="c3_jitupang"></span>；</label>
+                                                <label>疼痛数字评分：<span class="label label-info" id="c3_tengtong"></span>分；</label>
+                                                <label>直腿抬高试验：<span class="label label-info" id="c3_zhitui"></span>；</label>
+                                                <label>直腿抬高加强试验：<span class="label label-info" id="c3_jiaqiang"></span>；</label>
+                                                <p id="c3_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case4">
+                                                <label>血压：<span class="label label-info" id="c4_xueya"></span>；</label>
+                                                <label>屈：<span class="label label-info" id="c4_qu"></span>°；</label>
+                                                <label>内旋：<span class="label label-info" id="c4_neixuan"></span>°；</label>
+                                                <label>外旋：<span class="label label-info" id="c4_waixuan"></span>°；</label>
+                                                <label>疼痛数字评分：<span class="label label-info" id="c4_tengtong"></span>分；</label>
+                                                <label>浮髌试验：<span class="label label-info" id="c4_fubin"></span>；</label>
+                                                <label>抽屉试验：<span class="label label-info" id="c4_chouti"></span>；</label>
+                                                <label>膝关节旋转试验：<span class="label label-info" id="c4_xiguanjie"></span>；</label>
+                                                <label>研磨试验：<span class="label label-info" id="c4_yanmo"></span>；</label>
+                                                <p id="c4_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case5">
+                                                <p id="c5_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case6">
+                                                <label>血压：<span class="label label-info" id="c6_xueya"></span>；</label>
+                                                <label>疼痛数字评分：<span id="c6_tengtong"></span>分；</label>
+                                                <p id="c6_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case8">
+                                                <label>血压：<span class="label label-info" id="c8_xueya"></span>；</label>
+                                                <label>温度：<span class="label label-info" id="c8_wendu"></span>°；</label>
+                                                <label>疼痛数字评分：<span class="label label-info" id="c8_tengtong"></span>分；</label>
+                                                <p id="c8_pingding"></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="i_Case9">
+                                                <label>血压：<span class="label label-info" id="c9_xueya"></span>；</label>
+                                                <label>温度：<span class="label label-info" id="c9_wendu"></span>°；</label>
+                                                <label>疼痛数字评分：<span class="label label-info" id="c9_tengtong"></span>分；</label>
+                                                <p id="c9_pingding"></p>
+                                            </div>
+                                        </div>
+
+                                        <label>康复阶段治疗目标与计划：</label>
+                                        <p>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="1" disabled>&nbsp;改善ROM&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="2" disabled>&nbsp;增强肌力&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="3" disabled>&nbsp;缓解痉挛&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="4" disabled>&nbsp;促进血液循环&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="5" disabled>&nbsp;消肿解痛&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="6" disabled>&nbsp;改善微循环&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="7" disabled>&nbsp;松解粘连&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="8" disabled>&nbsp;增强活动能力&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Goal" value="99" disabled>&nbsp;其他：
+                                                <span id="i_GoalPlus"></span>
+                                            </label>
+                                        </p>
+                                        <label>治疗处方：</label>
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>编号</th>
+                                                    <th>项目</th>
+                                                    <th>部位</th>
+                                                    <th>方法</th>
+                                                    <th>计量</th>
+                                                    <th>时间</th>
+                                                    <th>次数</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="i_Recipe">
+                                            </tbody>
+                                        </table>
+                                        <label>注意事项：</label>
+                                        <p>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="1" disabled>&nbsp;密切观察，酌情调整&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="2" disabled>&nbsp;行走不稳或骨质疏松，预防跌倒&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="3" disabled>&nbsp;局部感觉障碍或循环不良，预防灼伤&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="4" disabled>&nbsp;骨折早期或未愈防再骨折&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="5" disabled>&nbsp;注意血压、心率变化&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="6" disabled>&nbsp;高血压病史&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="7" disabled>&nbsp;糖尿病病史&nbsp;</label>
+                                            <label>
+                                                <input type="checkbox" name="i_Notice" value="99" disabled>&nbsp;其他：
+                                                <span id="i_NoticePlus"></span>
+                                            </label>
+                                        </p>
+                                        <label>总结：</label>
+                                        <p id="i_Summery"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary tab-pane fade" id="AddCase">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">新增病例信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <h4>
+                                    <span class="label label-primary PatientSt"></span>
+                                </h4>
+                                <hr/>
+                                <form class="form" id="CaseFrm1">
+                                    <div class="form-group">
+                                        <label for="Description">主诉</label>
+                                        <input type="text" class="form-control" name="Description" placeholder="请输入内容">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="SickHistory">病史</label>
+                                        <input type="text" class="form-control" name="SickHistory" placeholder="请输入内容">
+                                    </div>
+                                    <fieldset>
+                                        <legend>诊断</legend>
+                                        <select class="form-control" id="CaseType" name="CaseType">
+                                            <option data-toggle="tab" data-target="#Case1" value="1">颈椎病</option>
+                                            <option data-toggle="tab" data-target="#Case2" value="2">肩周炎</option>
+                                            <option data-toggle="tab" data-target="#Case3" value="3">腰椎病</option>
+                                            <option data-toggle="tab" data-target="#Case4" value="4">骨关节病</option>
+                                            <option data-toggle="tab" data-target="#Case5" value="5">脑卒中</option>
+                                            <option data-toggle="tab" data-target="#Case6" value="6">腱鞘炎</option>
+                                            <option data-toggle="tab" data-target="#Case8" value="8">带状疱疹</option>
+                                            <option data-toggle="tab" data-target="#Case9" value="9">丹毒</option>
+                                        </select>
+                                    </fieldset>
+                                </form>
+                                <br/>
+                                <form class="form" id="CaseFrm2">
+                                    <fieldset>
+                                        <legend>体检和评定</legend>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade in active" id="Case1">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c1_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c1_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c1_qianqu">颈部活动受限，前屈</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="45" data-bts-step="1" value="30"
+                                                        name="c1_qianqu">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c1_xuanzhuan">颈部活动受限，左右旋转</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="60" data-bts-step="1" value="40"
+                                                        name="c1_xuanzhuan">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>C6、6、7棘突压痛</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_jitu" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_jitu" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>颈部及双肩胛提肌压痛</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_tiji" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_tiji" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c1_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="4"
+                                                        name="c1_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>压顶试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_yading" value="1">+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_yading" value="0" checked>-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>臂丛牵拉试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_bicong" value="1">+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_bicong" value="0" checked>-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>霍夫曼征</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_hoffmann" value="1">+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c1_hoffmann" value="0" checked>-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="pingding" placeholder="请输入内容">神清，颈椎XCTMRI示：5-6 6-7 7-8，椎间盘突出膨隆，生理曲°变直正常，骨端边缘变尖，增生，退变。ADL：正常。</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case2">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c2_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_qianqu">肩部活动受限，前屈</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="180" data-bts-step="1" value="80"
+                                                        name="c2_qianqu">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_houshen">肩部活动受限，后伸</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="60" data-bts-step="1" value="10"
+                                                        name="c2_houshen">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_waizhan">水平外展</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="40" data-bts-step="1" value="80"
+                                                        name="c2_waizhan">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_neishou">水平内收</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="130" data-bts-step="1" value="80"
+                                                        name="c2_neishou">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_neixuan">外展内旋</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="70" data-bts-step="1" value="80"
+                                                        name="c2_neixuan">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_waixuan">外展外旋</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="90" data-bts-step="1" value="80"
+                                                        name="c2_waixuan">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>肩前后中压痛</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c2_yatong" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c2_yatong" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c2_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="5"
+                                                        name="c2_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="c2_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c2_pingding" placeholder="请输入内容">神清，上肢肌力正常、感觉正常。ADL：正常；X片显示无异常。
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case3">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c3_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c3_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="c3_qianqu">腰部活动受限，前屈</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="80" data-bts-step="1" value="60"
+                                                        name="c3_qianqu">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="c3_jitu">L3、4、5 S1棘突压痛</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_jitu" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_jitu" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="c3_jitupang">L3、4、5 S1棘突旁压痛</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_jitupang" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_jitupang" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="c3_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="4"
+                                                        name="c3_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="c3_zhitui">直腿抬高试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_zhitui" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_zhitui" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="c3_jiaqiang">直腿抬高加强试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_jiaqiang" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c3_jiaqiang" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="c3_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c3_pingding" placeholder="请输入内容">神清，下肢肌力正常，下肢感觉正常，下肢腱反射正常，腰椎XCTMRI示：L2-3 3-4椎间盘突出膨隆，3-4 4-5 L5-S1椎间盘突出，3-4-5椎体滑脱，相应椎管狭窄，腰椎骨质增生、退变，有骨质疏松症史。ADL：正常。
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case4">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c4_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_qu">屈</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="130" data-bts-step="1" value="60"
+                                                        name="c4_qu">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_neixuan">内旋</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="30" data-bts-step="1" value="10"
+                                                        name="c4_neixuan">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_waixuan">外旋</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-min="0" data-bts-max="40" data-bts-step="1" value="10"
+                                                        name="c4_waixuan">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="4"
+                                                        name="c4_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_fubin">浮髌试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_fubin" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_fubin" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_chouti">抽屉试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_chouti" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_chouti" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_xiguanjie">膝关节旋转试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_xiguanjie" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_xiguanjie" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c4_yanmo">研磨试验</label>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_yanmo" value="1" checked>+</label>
+                                                    </div>
+                                                    <div class="radio-inline">
+                                                        <label>
+                                                            <input type="radio" name="c4_yanmo" value="0">-</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="c4_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c4_pingding" placeholder="请输入内容">神清，下左右膝关节活动受限， 左右膝红肿。下肢肌力正常，下肢感觉正常。X片显示：“增生，退变，关节间隙变窄”。
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case5">
+                                                <div class="form-group">
+                                                    <label for="c5_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c5_pingding" placeholder="请输入内容">神清，神清，营养发育可，口齿欠流利，交流可，轮椅推入病房，记忆力、定向力、计算力可，右侧鼻唇沟变浅，伸舌右偏，右侧肢体腱反射活跃，右上肢肌力：4-，右下肢肌力：4，偏瘫运动功能评价(Brunnstrom)：右上臂3级，手2级，右下肢3+，立位平衡2级，日常生活能力评价（ADL）：65分
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case6">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c6_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c6_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c6_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="4"
+                                                        name="c6_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="c6_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c6_pingding" placeholder="请输入内容">左腕部桡侧略肿胀，伴有压痛，活动时较明显。
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case8">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c8_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c8_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c8_wendu">温度</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-decimals="1" data-bts-min="35" data-bts-max="42"
+                                                        data-bts-step="0.1" value="37.0" name="c8_wendu">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c8_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="4"
+                                                        name="c8_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="c8_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c8_pingding" placeholder="请输入内容">一般状况可，左右胸部、背部、腰部局部皮肤红肿，有片状疱疹，呈横带状分布，约3cm*5cm。
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="Case9">
+                                                <div class="form-group col-md-4">
+                                                    <label for="c9_xueya">血压</label>
+                                                    <input type="text" class="form-control" name="c9_xueya" placeholder="请输入内容" value="120/80mmHg">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c9_wendu">温度</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="°" data-bts-decimals="1" data-bts-min="35" data-bts-max="42"
+                                                        data-bts-step="0.1" value="37.0" name="c9_wendu">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="c9_tengtong">疼痛数字评分</label>
+                                                    <input type="text" class="form-control spin" data-bts-postfix="分" data-bts-min="1" data-bts-max="10" data-bts-step="1" value="4"
+                                                        name="c9_tengtong">
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="c9_pingding">其他评定</label>
+                                                    <textarea type="text" class="form-control" rows="3" name="c9_pingding" placeholder="请输入内容">神清，左右下肢内外侧呈片状红疹，略高于皮肤，与正常皮肤界限清晰，局部皮温升高，伴压痛，压后红色消退，去除压力后红色复现，侧腹股沟区淋巴结肿大伴有压痛。血常规：白细胞总数升高，中性粒升高。
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                                <br/>
+                                <form class="form" id="CaseFrm3">
+                                    <fieldset>
+                                        <legend>康复阶段治疗目标与计划</legend>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="1">改善ROM</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="2">增强肌力</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="3">缓解痉挛</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="4">促进血液循环</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="5">消肿解痛</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="6">改善微循环</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="7">松解粘连</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="8">增强活动能力</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Goal" value="99">其他：</label>
+                                            <input type="text" name="GoalPlus" placeholder="其他">
+                                        </div>
+                                    </fieldset>
+                                    <br/>
+                                    <fieldset>
+                                        <legend>治疗处方</legend>
+                                        <table class="table table-striped table-hover" id="Recipe">
+                                            <thead>
+                                                <tr>
+                                                    <th>编号</th>
+                                                    <th>项目</th>
+                                                    <th>部位</th>
+                                                    <th>方法</th>
+                                                    <th>计量</th>
+                                                    <th>时间</th>
+                                                    <th>次数</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="1">1</td>
+                                                    <td>微波</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="辐射">辐射</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>3W</td>
+                                                    <td>20分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="2">2</td>
+                                                    <td>牵引</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="间歇">间歇</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" value="30KG">
+                                                    </td>
+                                                    <td>20分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="3">3</td>
+                                                    <td>低周波、神肌仪</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="并置">并置</option>
+                                                            <option value="对置">对置</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>耐受量</td>
+                                                    <td>15分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="4">4</td>
+                                                    <td>红外线</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="照射">照射</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>微热量</td>
+                                                    <td>20分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="5">5</td>
+                                                    <td>药透</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="并置">并置</option>
+                                                            <option value="对置">对置</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>耐受量</td>
+                                                    <td>30分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="6">6</td>
+                                                    <td>半导体激光</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="照射">照射</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>40mA</td>
+                                                    <td>15分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="7">7</td>
+                                                    <td>关节松动术</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="手法">手法</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>耐受量</td>
+                                                    <td>20分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="8">8</td>
+                                                    <td>偏瘫综合治疗</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="手法">手法</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>耐受量</td>
+                                                    <td>20分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" value="9">9</td>
+                                                    <td>运动疗法</td>
+                                                    <td>
+                                                        <select class="form-control part">
+                                                            <option>颈椎</option>
+                                                            <option>左上肢</option>
+                                                            <option>右上肢</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control">
+                                                            <option value="手法">手法</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>耐受量</td>
+                                                    <td>20分钟</td>
+                                                    <td>5次</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>注意事项</legend>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="1">密切观察，酌情调整</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="2">行走不稳或骨质疏松，预防跌倒</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="3">局部感觉障碍或循环不良，预防灼伤</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="4">骨折早期或未愈防再骨折</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="5">注意血压、心率变化</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="6">高血压病史</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="7">糖尿病病史</label>
+                                        </div>
+                                        <div class="checkbox-inline">
+                                            <label>
+                                                <input type="checkbox" name="Notice" value="99">其他：</label>
+                                            <input type="text" name="NoticePlus" placeholder="其他">
+                                        </div>
+                                    </fieldset>
+                                    <br/>
+                                    <div class="form-group">
+                                        <label for="Summery">总结</label>
+                                        <textarea class="form-control" rows="3" name="Summery" placeholder="请输入内容"></textarea>
+                                    </div>
+                                    <input type="button" class="btn btn-primary" id="AddCaseBtn" value="保存">
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary tab-pane fade" id="ProjectHis">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">记录疗程</h3>
+                            </div>
+                            <div class="panel-body">
+                                <h4>
+                                    <span class="label label-primary PatientSt"></span>
+                                    <span class="label label-primary CaseSt"></span>
+                                </h4>
+                                <hr/>
+                                <div id="Period">
+                                </div>
+                                <input type="button" class="btn btn-primary" id="AddPeriodTmp" value="新疗程+" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <nav class="navbar navbar-default navbar-fixed-bottom">
+                <div class="container-fluid">
+                    <h4>
+                        <span class="label label-primary">状态</span>
+                        <span class="label label-primary PatientSt"></span>
+                        <span class="label label-primary CaseSt"></span>
+                    </h4>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmPatient">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">病患添加确认</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmPatientMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="confirmPatientBtn">保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmCase">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">病例添加确认</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmCaseMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="confirmCaseBtn">保存</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="notice">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">消息</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="noticeMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="info">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">消息</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="infoMessage"></p>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="periodTmp">
+        <fieldset>
+            <legend class="periodTitle">疗程X</legend>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>日期</th>
+                        <th>治疗反应</th>
+                        <th>备注</th>
+                        <th>签名</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="form-control datepicker"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><select class="form-control doctor"></select></td>
+                        <td><input type="button" class="btn btn-primary sign" value="提交" /></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><input type="text" class="form-control datepicker"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><select class="form-control doctor"></select></td>
+                        <td><input type="button" class="btn btn-primary sign" value="提交" /></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><input type="text" class="form-control datepicker"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><select class="form-control doctor"></select></td>
+                        <td><input type="button" class="btn btn-primary sign" value="提交" /></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><input type="text" class="form-control datepicker"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><select class="form-control doctor"></select></td>
+                        <td><input type="button" class="btn btn-primary sign" value="提交" /></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><input type="text" class="form-control datepicker"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><select class="form-control doctor"></select></td>
+                        <td><input type="button" class="btn btn-primary sign" value="提交" /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="Summary">阶段小结：</label>
+                    <label class="radio-inline"><input type="radio" name="Sum" value="1" checked>痊愈</label>
+                    <label class="radio-inline"><input type="radio" name="Sum" value="2">显效</label>
+                    <label class="radio-inline"><input type="radio" name="Sum" value="3">有效</label>
+                    <label class="radio-inline"><input type="radio" name="Sum" value="4">无效</label>
+                    <label class="radio-inline"><input type="radio" name="Sum" value="5">其他</label>
+                    <input type="text" name="SumPlus" placeholder="其他：">
+                </div>
+                <br/>
+                <br/>
+                <div class="form-group">
+                    <label for="Doctor">签名：</label>
+                    <select class="form-control doctor" name="Doctor"></select>
+                </div>
+                <div class="form-group">
+                    <label for="Date">日期：</label>
+                    <input type="text" class="form-control datepicker" name="Date">
+                </div>
+                <input type="button" class="btn btn-primary summary" value="提交" />
+            </form>
+        </fieldset>
+        <hr/>
+    </template>
+</body>
+
+<script type="text/javascript">
+</script>
+
+</html>
